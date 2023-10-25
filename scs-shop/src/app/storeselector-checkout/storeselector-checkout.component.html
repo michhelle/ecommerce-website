@@ -1,0 +1,35 @@
+<h2>Originating store</h2>
+<div class="container">
+<!-- <div class="store card mb-3">
+    <div class="card-body">
+    <h5 class="store-name card-title">Queen St W, Toronto</h5>
+    <p class="card-text">Phone number: 416-128-3280</p>
+    <button class="store btn btn-secondary stretched-link" *ngIf="this.currentStore == 'Queen St W, Toronto'; else queenNotSelected" disabled>Selected</button>
+    <ng-template #queenNotSelected><button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button></ng-template>
+    </div>
+</div>
+<div class="store card mb-3">
+    <div class="card-body">
+    <h5 class="store-name card-title">CF Markville, Markham</h5>
+    <p class="card-text">Phone number: 416-124-1199</p>
+    <button class="store btn btn-secondary stretched-link" *ngIf="this.currentStore == 'CF Markville, Markham'; else mvNotSelected" disabled>Selected</button>
+    <ng-template #mvNotSelected><button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button></ng-template>
+    </div>
+</div>
+<div class="store card mb-3">
+    <div class="card-body">
+    <h5 class="store-name card-title">Square One Shopping Centre, Mississauga</h5>
+    <p class="card-text">Phone number: 416-927-5682</p>
+    <button class="store btn btn-secondary stretched-link" *ngIf="this.currentStore == 'Square One Shopping Centre, Mississauga'; else sqNotSelected" disabled>Selected</button>
+    <ng-template #sqNotSelected><button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button></ng-template>
+    </div>
+</div>-->
+    <div class="store card mb-3" *ngFor="let store of this.stores">
+        <div class="card-body" id="{{store.StoreID}}">
+            <h5 class="store-name card-title">{{store.StoreName}}, {{store.StoreCity}}</h5>
+            <p class="card-text">Phone number: {{store.StorePhone}}</p>
+            <button class="store btn btn-secondary stretched-link" *ngIf="this.currentStore == (store.StoreName + ', ' + store.StoreCity); else sqNotSelected" disabled>Selected</button>
+            <ng-template #sqNotSelected><button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button></ng-template>
+        </div>
+    </div>
+</div>

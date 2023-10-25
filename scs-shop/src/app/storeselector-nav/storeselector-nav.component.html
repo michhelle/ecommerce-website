@@ -1,0 +1,56 @@
+<div class="nav bg-dark-subtle d-flex py-2 px-3 align-items-center">
+  <a href="javascript:void(0);" (click)="this.getLocation()" class="me-3 text-muted text-decoration-none"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+      <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+    </svg>
+    <small id="postalCode">Find the nearest store</small>
+  </a>
+  <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#storeSelect" class="me-3 text-muted text-decoration-none"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+      <path d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z" />
+      <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1Zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3V1Z" />
+    </svg>
+    <small id="storeLocation">No store selected</small>
+  </a>
+</div>
+
+<div class="modal fade" id="storeSelect" tabindex="-1" aria-labelledby="storeSelectLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 lead" id="storeSelectLabel">Select your preferred store</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4" data-bs-dismiss="modal">
+        <!-- <div class="store card mb-3">
+          <div class="card-body">
+            <h5 class="store-name card-title">Queen St W, Toronto</h5>
+            <p class="card-text">Phone number: 416-128-3280</p>
+            <button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button>
+          </div>
+        </div>
+        <div class="store card mb-3" data-bs-dismiss="modal">
+          <div class="card-body">
+            <h5 class="store-name card-title">CF Markville, Markham</h5>
+            <p class="card-text">Phone number: 416-124-1199</p>
+            <button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button>
+          </div>
+        </div>
+        <div class="store card mb-3" data-bs-dismiss="modal">
+          <div class="card-body">
+            <h5 class="store-name card-title">Square One Shopping Centre, Mississauga</h5>
+            <p class="card-text">Phone number: 416-927-5682</p>
+            <button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button>
+          </div>
+        </div> -->
+        <div class="store card mb-3" *ngFor="let store of this.stores">
+          <div class="card-body" id="{{store.StoreID}}">
+            <h5 class="store-name card-title">{{store.StoreName}}, {{store.StoreCity}}</h5>
+            <p class="card-text">Phone number: {{store.StorePhone}}</p>
+            <button class="store btn btn-primary stretched-link" (click)="this.selectStore()">Select this store</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  

@@ -1,0 +1,26 @@
+<div class="row"> 
+    <hr>
+    
+    <div class="row">
+      <div class="d-flex justify-content-center">
+        <div class="google_map_container">
+          <!-- <google-map [zoom]="mapZoom" [center]="Center" [options]="mapOptions">
+            <map-marker
+              #marker="mapMarker"
+              [position]="mapCenter"
+              [options]="markerOptions"
+              (mapClick)="openInfoWindow(marker)">
+            </map-marker>
+             <map-marker *ngFor="let position of markerPositions" [position]="position" [title]="'My Marker'"></map-marker>
+            <map-info-window>{{ markerInfoContent }}</map-info-window>
+          </google-map> -->
+          <google-map 
+            [center]="center"
+            [zoom]="zoom">
+            <map-directions-renderer *ngIf="(directionsResults$ | async) as directionsResults"
+                                    [directions]="directionsResults"></map-directions-renderer>
+          </google-map>
+        </div> 
+      </div>
+    </div>
+</div>

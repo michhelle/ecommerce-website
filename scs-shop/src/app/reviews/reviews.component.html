@@ -1,0 +1,106 @@
+<app-navbar></app-navbar>
+
+<div class="bg-dark bg-gradient d-flex align-items-center justify-content-center flex-column" style="height:300px;">
+    <h1 class="display-4 text-white">Reviews</h1>
+    <h6 class="text-center lead text-white" *ngIf="reviewCountIsOne()">
+        {{reviewCount}} review
+      </h6>
+    <h6 class="text-center lead text-white" *ngIf="!reviewCountIsOne()">
+        {{reviewCount}} reviews
+    </h6>
+</div>
+
+<div class="container-fluid d-flex mt-3">
+  <a class="btn btn-outline-primary m-auto my-3" data-bs-toggle="modal" href="#reviewsModal" role="button" id="reviewsModalButton" *ngIf="loggedIn()">Write a review</a>
+  <a class="btn btn-outline-primary m-auto my-3" data-bs-toggle="modal" href="#logInModal" role="button" id="reviewsModalButton" *ngIf="!loggedIn()">Write a review</a>
+</div>
+<div class="container p-3">
+  <div class="card m-auto mb-4" id="{{ review.id }}" *ngFor="let review of reviews">
+    <div class="card-header d-flex align-items-center">
+      <img class="rounded-circle me-2" width="30px" src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png">
+      {{ review.name }}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{review.review_title}}</h5>
+      <h6 class="card-subtitle mb-2 text-secondary">
+        Gave a {{review.rating}}/5 for {{review.product_name}} on {{getDate(review.created_at)}}
+      </h6>
+        <p class="card-text">{{review.review_text}}</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="reviewsModal" aria-hidden="true" aria-labelledby="reviewsModalLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 lead">
+            {{getCurrentUsername()}}'s Review
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="closeLoginModal"
+        ></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="reviewForm" (ngSubmit)="addReview()">
+            <div class="mb-3">
+                <label for="product" class="form-label">Product</label>
+                <select class="form-select" name="product" formControlName="product" required>
+                  <option value="" selected disabled>Select product</option>
+                  <option *ngFor="let item of itemList" [value]="item.ItemName">{{item.ItemName}}</option>
+                </select>
+                <div *ngIf="reviewForm.get('product').invalid && (reviewForm.get('product').dirty || reviewForm.get('product').touched)">
+                  <div *ngIf="reviewForm.get('product').errors?.['required']" class="text-danger">Product name is required</div>
+                </div>              
+            </div>
+            <div class="mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="title"
+                placeholder="Enter review title"
+                required
+              />
+              <div *ngIf="reviewForm.get('title').invalid && (reviewForm.get('title').dirty || reviewForm.get('title').touched)">
+                <div *ngIf="reviewForm.get('title').errors?.['required']" class="text-danger">Title is required</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="review" class="form-label">Review</label>
+              <textarea
+                class="form-control"
+                formControlName="review"
+                rows="3"
+                placeholder="Enter your review"
+                required
+              ></textarea>
+              <div *ngIf="reviewForm.get('review').invalid && (reviewForm.get('review').dirty || reviewForm.get('review').touched)">
+                <div *ngIf="reviewForm.get('review').errors?.['required']" class="text-danger">Review is required</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="rating" class="form-label">Rating</label>
+              <select class="form-select" formControlName="rating" aria-label="Select rating" required>
+                <option value="" selected disabled>Select rating</option>
+                <option value="1">1 star</option>
+                <option value="2">2 stars</option>
+                <option value="3">3 stars</option>
+                <option value="4">4 stars</option>
+                <option value="5">5 stars</option>
+              </select>
+              <div *ngIf="reviewForm.get('rating').invalid && (reviewForm.get('rating').dirty || reviewForm.get('rating').touched)">
+                <div *ngIf="reviewForm.get('rating').errors?.['required']" class="text-danger">Review is required</div>
+              </div>
+              <span id="formMessage" class="text-primary"></span>
+            </div>
+            <button type="submit" class="btn btn-primary d-flex m-auto" [disabled]="!reviewForm.valid">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

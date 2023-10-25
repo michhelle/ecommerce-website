@@ -1,0 +1,123 @@
+<app-navbar></app-navbar>
+<div class="container">
+  <div class="col">
+    <div class="row p-2">
+      <h1>Invoice #{{ order }}</h1>
+    </div>
+    <div class="row p-2">
+      <div class="col">
+        <h3>Ship to</h3>
+        <ng-container *ngFor="let row of rows; let i = index">
+          <p *ngIf="i === 0">
+            {{ row.DestAddress }}
+            <br />{{ row.DestCity }}, {{ row.DestProvince }} <br />{{
+              row.DestPostcode
+            }}
+          </p>
+        </ng-container>
+      </div>
+      <div class="col">
+        <h3>Bill to</h3>
+        <p>Same as shipping address</p>
+      </div>
+      <div class="col">
+        <h3>Payment</h3>
+        <p>Credit card</p>
+      </div>
+    </div>
+    <div class="container m-1 p-4">
+      <h2>Order Summary</h2>
+      <div class="card rounded-3 m-auto">
+        <table class="table bg-light m-auto rounded-3 text-center">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Size</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+            </tr>
+            <tr *ngFor="let row of rows">
+              <td>
+                {{ row.ItemID }}
+              </td>
+              <td>
+                {{ row.ItemName }}
+              </td>
+              <td>
+                {{ row.ItemSize }}
+              </td>
+              <td>
+                {{ row.OrderQuantity }}
+              </td>
+              <td>
+                {{ row.ItemPrice | currency }}
+              </td>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="m-auto" id="totals">
+        <br />
+        <div class="d-flex justify-content-between p-2">
+          <h5>Subtotal</h5>
+          <ng-container *ngFor="let row of rows; let i = index">
+            <h5 class="text-end" *ngIf="i === 0">
+              {{ row.Subtotal | currency }}
+            </h5>
+          </ng-container>
+        </div>
+
+        <ng-container *ngFor="let row of rows; let i = index">
+          <ng-template [ngIf]="i === 0">
+            <ng-container *ngIf="activeCoupon.CouponDiscount == 1; else couponActive">
+              <div class="d-flex justify-content-between p-2">
+                <h5>Discount</h5>
+                <h5 class="text-end">-{{0 | currency}}</h5>
+              </div>
+
+              <div class="d-flex justify-content-between p-2">
+                <h5>Taxes</h5>
+                <h5>{{ row.Subtotal * 0.13 | currency }}</h5>
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between p-2">
+                <h4>Total</h4>
+                <h4>{{ row.Subtotal * 1.13 | currency }}</h4>
+              </div>
+              <hr />
+            </ng-container>
+            <ng-template #couponActive>
+              <div class="d-flex justify-content-between p-2">
+                <h5>Discount</h5>
+                <h5 class="text-end">-{{ row.Subtotal * (1-activeCoupon.CouponDiscount) | currency}}</h5>
+              </div>
+
+              <div class="d-flex justify-content-between p-2">
+                <h5>Taxes</h5>
+                <h5>{{ row.Subtotal * (activeCoupon.CouponDiscount) * 0.13 | currency }}</h5>
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between p-2">
+                <h4>Total</h4>
+                <h4>{{ row.Subtotal * (activeCoupon.CouponDiscount) * 1.13 | currency }}</h4>
+              </div>
+              <hr />
+            </ng-template>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="text-center">
+      <h3>Shipment method</h3>
+      <p>Local truck delivery</p>
+      <h3>Originating store</h3>
+      <ng-container *ngFor="let row of rows; let i = index">
+        <p *ngIf="i === 0">{{ row.StoreName }} <span *ngIf="mapActive"><app-map></app-map></span></p>
+      </ng-container>
+    </div>
+  </div>
+</div>

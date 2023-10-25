@@ -1,0 +1,22 @@
+<app-navbar></app-navbar>
+<app-storeselector-nav></app-storeselector-nav>
+
+<div class="container-fluid">
+    <div class="row justify-content-center text-center border p-5">
+        <h1>Welcome to SCS</h1>
+        <a routerLink="/items" routerLinkActive="active" ariaCurrentWhenActive="page" class="btn btn-outline-primary w-auto">Shop Now</a>
+    </div>
+    <div class="row justify-content-center text-center border p-5">
+        <p><strong>Browser Info:</strong> {{this.getUserAgent()}}</p>
+    </div>
+    <!-- <div class="row justify-content-center text-center">
+        <div class="col border p-5">
+        <h2>Tops</h2>
+        <a href="#" class="btn btn-outline-primary w-auto">Shop Now</a>
+        </div>
+        <div class="col border p-5">
+        <h2>Bottoms</h2>
+        <a href="#" class="btn btn-outline-primary w-auto">Shop Now</a>
+        </div>
+    </div> -->
+</div>

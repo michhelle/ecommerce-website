@@ -1,0 +1,19 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <h1>My Orders</h1>
+    <table *ngIf="orders.length > 0; else noOrders">
+        <tr>
+            <th>Order Number</th>
+            <th>Date Placed</th>
+        </tr>
+        <tr *ngFor="let order of orders">
+            <td><a routerLink="/invoice" [queryParams]="{'order': order.OrderID}">{{order.OrderID}}</a></td>
+            <td>{{order.DateIssued.slice(0,10)}} {{order.DateIssued.slice(11,16)}}</td>
+        </tr>
+    </table>
+    <ng-template #noOrders>
+        <p>You have no orders placed.</p>
+        <a routerLink="/items" class="btn btn-primary">Shop Now</a>
+    </ng-template>
+</div>
+

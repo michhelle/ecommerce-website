@@ -1,0 +1,204 @@
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light p-2 bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/"><img src="assets/scs-logo.png" style="width: 80px"></a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="navbar-nav ms-auto align-middle justify-content-center">
+            <a routerLink="/" class="nav-item nav-link ms-2">Home</a>
+            <a routerLink="/items" class="nav-item nav-link ms-2">Shop</a>
+            <a routerLink="/about" class="nav-item nav-link ms-2">About Us</a>
+            <a routerLink="/reviews" class="nav-item nav-link ms-2">Reviews</a>
+            <a routerLink="/services" class="nav-item nav-link ms-2">Services</a>
+            <a routerLink="/orders" class="nav-item nav-link ms-2" *ngIf="this.currentUser['name'] != null">My Orders</a>
+            <div class="dropdown ms-2" *ngIf="currentUser['isAdmin'] == 'Y'">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Admin
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item disabled">DB Maintain</a>
+                <a routerLink="/admin" [queryParams]="{mode: 'create'}" class="dropdown-item">Insert</a>
+                <a routerLink="/admin" [queryParams]="{mode: 'read'}" class="dropdown-item">Select</a>
+                <a routerLink="/admin" [queryParams]="{mode: 'update'}" class="dropdown-item">Update</a>
+                <a routerLink="/admin" [queryParams]="{mode: 'delete'}" class="dropdown-item">Delete</a>
+                <!-- <a class="dropdown-item">Search</a> -->
+              </div>
+            </div>
+            <a class="btn btn-primary ms-2" data-bs-toggle="modal" href="#logInModal" role="button" id="loginButton" *ngIf="!this.currentUser['name']">Login</a>
+            <a class="btn btn-primary ms-2" data-bs-toggle="modal" href="#userModal" role="button" id="userInfoButton" *ngIf="this.currentUser['name'] != null">Welcome, {{this.currentUser["name"]}}!</a>
+            
+            <span *ngIf="!currentUser['email']; else showCart">
+              <a class="nav-item nav-link ms-2 mr-0" data-bs-toggle="modal" href="#logInModal" role="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16"><path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/></svg>
+              </a>
+            </span>
+            <ng-template #showCart>
+              <a routerLink="/cart" class="nav-item nav-link ms-2 mr-0" (dragover)="this.allowDrop($event)" (drop)="this.onDrop($event)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16"><path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z"/></svg>
+                  <!-- <span class="p-1">{{this.getCartItemsNumber()}}</span> -->
+              </a>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="toast-container position-fixed top-0 p-3">
+      <ngb-toast *ngIf="showToast"> {{toastMsg}} </ngb-toast>
+    </div>
+    
+
+    <div class="nav align-items-center text-center justify-content-center border p-2">
+      <small>Use coupon code <strong>WELCOME15</strong> at checkout for 15% off!</small>
+    </div>
+  
+    <div class="modal fade" id="logInModal" aria-hidden="true" aria-labelledby="logInModalLabel" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 lead">Log in to your account</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeLoginModal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <span id="loginErrorMsg" style="color: red"></span>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" formControlName="email" aria-describedby="emailHelp" required>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" formControlName="password" required>
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="remember-me">
+                <label class="form-check-label" for="remember-me">Remember me</label>
+              </div>
+              <button type="submit" class="btn btn-outline-success d-block m-auto my-2" [disabled]="!loginForm.valid">Log In</button>
+              <button type="button" class="btn btn-outline-primary d-block m-auto my-2" data-bs-target="#signUpModal" data-bs-toggle="modal">Sign Up</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="modal fade" id="signUpModal" aria-hidden="true" aria-labelledby="signUpModalLabel" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 lead">Create an account</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeSignupModal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
+              <h1 class="fs-6 fw-bold">Personal Info</h1>
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="name" class="form-control" id="name" name="name" formControlName="name" aria-describedby="userName" required>
+                <span *ngIf="signupForm.controls['name'].invalid && (signupForm.controls['name'].dirty || signupForm.controls['name'].touched)" class="alert">
+                  <span *ngIf="signupForm.controls['name'].errors?.['required']">Name is required.</span>
+                </span>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" formControlName="email" aria-describedby="emailHelp" required email>
+                <span *ngIf="signupForm.controls['email'].invalid && (signupForm.controls['email'].dirty || signupForm.controls['email'].touched)" class="alert">
+                  <span *ngIf="signupForm.controls['email'].errors?.['required']">Email is required.</span>
+                  <span *ngIf="signupForm.controls['email'].errors?.['email']">Invalid email.</span>
+                </span>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" formControlName="password" required>
+                <span *ngIf="signupForm.controls['password'].invalid && (signupForm.controls['password'].dirty || signupForm.controls['password'].touched)" class="alert">
+                  <p *ngIf="signupForm.controls['password'].errors?.['required']">Password cannot be empty!</p>
+                  <p *ngIf="signupForm.controls['password'].errors?.['minlength']">Password must be at least 8 characters long.</p>
+                  <p *ngIf="signupForm.controls['password'].errors?.['invalidMsg']">{{signupForm.controls['password'].errors?.['invalidMsg']}}</p>
+                </span>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Repeat Password</label>
+                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" formControlName="password_confirmation" required>
+                <span *ngIf="signupForm.hasError('notMatched') && (signupForm.controls['password_confirmation'].dirty || signupForm.controls['password_confirmation'].touched)" class="alert">
+                  <p>Passwords do not match!</p>
+                </span>
+              </div>
+              <div class="mb-3">
+                <label for="telephone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="telephone" name="telephone" formControlName="telephone" aria-describedby="phoneNumber">
+                <span *ngIf="signupForm.controls['telephone'].invalid && (signupForm.controls['telephone'].dirty || signupForm.controls['telephone'].touched)" class="alert">
+                  <p *ngIf="signupForm.controls['telephone'].errors?.['required']">Telephone cannot be empty!</p>
+                  <p *ngIf="signupForm.controls['telephone'].errors?.['maxlength'] || signupForm.controls['telephone'].errors?.['invalidMsg']">Invalid phone number.</p>
+                </span>
+              </div>
+              <h1 class="fs-6 fw-bold mt-4">Address</h1>
+              <div class="mb-3">
+                <label for="streetaddr" class="form-label">Street Address</label>
+                <input type="text" class="form-control" id="streetaddr" name="streetaddr" formControlName="streetaddr"  aria-describedby="streetAddress">
+                <span *ngIf="signupForm.controls['streetaddr'].invalid && (signupForm.controls['streetaddr'].dirty || signupForm.controls['streetaddr'].touched)" class="alert">
+                  <span *ngIf="signupForm.controls['streetaddr'].errors?.['required']">Street address is required.</span>
+                </span>
+              </div>
+              <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" name="city" formControlName="city"  aria-describedby="cityAddress">
+                <span *ngIf="signupForm.controls['city'].invalid && (signupForm.controls['city'].dirty || signupForm.controls['city'].touched)" class="alert">
+                  <span *ngIf="signupForm.controls['city'].errors?.['required']">City is required.</span>
+                </span>
+              </div>
+              <div class="mb-3">
+                <label for="province" class="form-label">Province</label>
+                <!-- <input type="text" class="form-control" id="province" name="province" formControlName="province" aria-describedby="provinceAddress"> -->
+                <select class="form-select" id="province" name="province" formControlName="province">
+                  <option disabled>Province</option>
+                  <option value="{{prov}}" *ngFor="let prov of this.provinces">{{prov}}</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="postcode" class="form-label">Postal Code</label>
+                <input type="text" class="form-control" id="postcode" name="postcode" formControlName="postcode" aria-describedby="postAddress">
+                <span *ngIf="signupForm.controls['postcode'].invalid && (signupForm.controls['postcode'].dirty || signupForm.controls['postcode'].touched)" class="alert">
+                  <span *ngIf="signupForm.controls['postcode'].errors?.['required']">Postal code is required.</span>
+                  <p *ngIf="signupForm.controls['postcode'].errors?.['invalidMsg']">{{signupForm.controls['postcode'].errors?.['invalidMsg']}}</p>
+                </span>
+              </div>
+              <span id="signupError" style="color:red"></span>
+              <button type="submit" class="btn btn-outline-primary d-block m-auto my-2" [disabled]="!signupForm.valid">Sign Up</button>
+              <div class="form-text text-center">
+                Already have an account?
+                <a class="link-primary" href="logInModal" data-bs-target="#logInModal" data-bs-toggle="modal">Log In</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="userModal" aria-hidden="true" aria-labelledby="userModalLabel" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 lead">Account information</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p4">
+            <h5 class="fs-5 lead">Name</h5>
+            <p>{{this.currentUser["name"]}}</p>
+            <h5 class="fs-5 lead">Email</h5>
+            <p>{{this.currentUser["email"]}}</p>
+            <h5 class="fs-5 lead">Phone</h5>
+            <p>{{this.currentUser["phone"]}}</p>
+            <h5 class="fs-5 lead">Address</h5>
+            <p>{{this.currentUser["address"]}}, {{this.currentUser["postcode"]}}</p>
+            <h5 class="fs-5 lead">Balance</h5>
+            <p>{{this.currentUser["balance"] | currency}}</p>
+            <button class="btn btn-danger" data-bs-dismiss="modal" (click)="this.clearCurrentUser()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  

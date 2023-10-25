@@ -1,0 +1,240 @@
+<app-navbar></app-navbar>
+
+<div class="container-fluid">
+    <div class="row m-0">
+      <div class="col">
+        <span *ngIf="this.checkoutStep == 0">
+          <div class="row p-2">
+            <h1>Order</h1>
+          </div>
+          <div class="row p-2">
+              <app-storeselector-checkout></app-storeselector-checkout>
+          </div>
+          <div class="row p-2" >
+            <h2>Ship to</h2>
+            <form [formGroup]="shipToForm">
+              <!-- Beautification possible -->
+              <span *ngIf="fn.invalid && (fn.dirty || fn.touched)" class="alert">
+                <span *ngIf="fn.errors?.['required']">First name is required.</span>
+              </span>
+              <span *ngIf="ln.invalid && (ln.dirty || ln.touched)" class="alert">
+                <span *ngIf="ln.errors?.['required']">Last name is required.</span>
+              </span>
+              <span *ngIf="address.invalid && (address.dirty || address.touched)" class="alert">
+                <span *ngIf="address.errors?.['required']">Address is required.</span>
+              </span>
+              <span *ngIf="city.invalid && (city.dirty || city.touched)" class="alert">
+                <span *ngIf="city.errors?.['required']">City is required.</span>
+              </span>
+              <span *ngIf="postcode.invalid && (postcode.dirty || postcode.touched)" class="alert">
+                <span *ngIf="postcode.errors?.['required']">Postal code is required.</span>
+                <span *ngIf="postcode.errors?.['invalidMsg']">{{postcode.errors?.['invalidMsg']}}</span>
+              </span>
+
+              <div class="row p-2">
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="First name" formControlName="fn" required>
+                </div>
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="Last name" formControlName="ln" required>
+                </div>
+              </div>
+              <div class="row p-2">
+                <div class="col">
+                  <input type="text" class="form-control" placeholder="Address" formControlName="address" required>
+                </div>
+              </div>
+              
+              <div class="row p-2">
+                <div class="col">
+                  <input type="text" id="city" class="form-control" placeholder="City" formControlName="city" required>
+                </div>
+                <div class="col col-sm-2">
+                  <select class="form-select" id="province" name="province" formControlName="province">
+                    <option disabled>Province</option>
+                    <option value="{{prov}}" *ngFor="let prov of this.provinces">{{prov}}</option>
+                  </select>
+                </div>
+                <div class="col col-sm-3">
+                  <input type="text" id="postcode" class="form-control" placeholder="Postal Code" formControlName="postcode" required>
+                </div>
+              </div>
+            </form>
+          </div>
+        </span>
+
+        <div class="row p-2" *ngIf="this.checkoutStep == 1 || this.checkoutStep == 2">
+          <div class="row p-2" *ngIf="this.checkoutStep == 1">
+            <h1>Confirm shipment</h1>
+          </div>
+          <div class="row p-2" *ngIf="this.checkoutStep == 2">
+            <h1>Payment</h1>
+          </div>
+          <div class="row p-2">
+            <div class="col">
+              <h2>From branch</h2>
+              <p>{{currentStore}}</p>
+            </div>
+            <div class="col">
+              <h2>Ship to</h2>
+              <p>
+                {{fn.value}} {{ln.value}}<br>
+                {{address.value}}<br>
+                {{city.value}}, {{province.value}} {{postcode.value}}
+              </p>
+            </div>
+          </div>
+          <div class="row p-2" *ngIf="this.checkoutStep == 1">
+            <span *ngIf="mapActive">
+              <app-map></app-map>
+            </span>
+          </div>
+        </div>
+
+        <div class="row p-2" *ngIf="this.checkoutStep == 2">
+          <!-- <div class="row p-2">
+            <h2>Pay with user balance</h2>
+            <form>
+              <div class="form-check">
+                <span *ngIf="balance != 0; else noBalance">
+                  <input class="form-check-input" type="checkbox" value="" id="balance" (change)="useBalance()">
+                  <label class="form-check-label" for="balance">Pay with balance of <strong>{{balance | currency}}</strong></label>
+                  <input type="text" class="form-control">
+                </span>
+                <ng-template #noBalance>
+                  <input class="form-check-input" type="checkbox" value="" id="balance" disabled>
+                  <label class="form-check-label" for="balance">Pay with balance of <strong>{{balance | currency}}</strong></label>
+                </ng-template>
+              </div>
+            </form>
+          </div> -->
+          <div class="row p-2">
+            <h2>Pay by card</h2>
+            <h3>Card details</h3>
+
+            <form [formGroup]="paymentForm">
+              <span *ngIf="card.invalid && (card.dirty || card.touched)" class="alert">
+                <span *ngIf="card.errors?.['required']">Card number is required.</span>
+                <span *ngIf="card.errors?.['invalidMsg']">{{card.errors?.['invalidMsg']}}</span>
+              </span>
+              <span *ngIf="expiry.invalid && (expiry.dirty || expiry.touched)" class="alert">
+                <span *ngIf="expiry.errors?.['required']">Expiry is required.</span>
+                <span *ngIf="expiry.errors?.['invalidMsg']">{{expiry.errors?.['invalidMsg']}}</span>
+              </span>
+              <span *ngIf="cvv.invalid && (cvv.dirty || cvv.touched)" class="alert">
+                <span *ngIf="cvv.errors?.['required']">CVV is required.</span>
+                <span *ngIf="cvv.errors?.['invalidMsg']">{{cvv.errors?.['invalidMsg']}}</span>
+              </span>
+              <span *ngIf="paymentPC.invalid && (paymentPC.dirty || paymentPC.touched)" class="alert">
+                <span *ngIf="paymentPC.errors?.['required']">Postal code is required.</span>
+                <span *ngIf="paymentPC.errors?.['invalidMsg']">{{paymentPC.errors?.['invalidMsg']}}</span>
+              </span>
+
+              <div class="row p-2">
+                <label class="form-label">Card number</label><br>
+                <div class="input-group">
+                  <span class="input-group-text">VISA/MC</span>
+                  <input type="text" class="form-control" placeholder="1234 5678 9012 3456" formControlName="card" required>
+                </div>
+              </div>
+    
+              <div class="row p-2">
+                <div class="col">
+                  <label class="form-label">Expiry</label>
+                  <input type="text" class="form-control" placeholder="MM/YY" formControlName="expiry" required>
+                </div>
+                <div class="col">
+                  <label class="form-label">CVV</label>
+                  <input type="text" class="form-control" placeholder="3 digits" formControlName="cvv" required>
+                </div>
+                <div class="col col-sm-3">
+                  <label class="form-label">Postal Code</label>
+                  <input type="text" class="form-control" placeholder="A1A 1A1" formControlName="paymentPC" required>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- <div class="row p-2" *ngIf="this.checkoutStep == 3">
+          <p>Go to Invoice</p>
+        </div> -->
+
+      </div>
+      <div class="col col-sm-4 p-2">
+        <div class="row p-2">
+          <h2>Order summary</h2>
+          <div class="row" id="items">
+            <div class="d-flex justify-content-between align-items-center p-2" *ngFor="let item of cart">
+              <div class="col d-flex flex-row p-2">
+                <img src="assets/products/{{ item.Picture_URL }}" width="100" height="100">
+                <div>
+                  <p class="p-2">{{ item.ItemName }}</p>
+                  <small class="p-2">{{ item.Quantity }} x {{ item.ItemSize }}</small>
+                </div>
+                
+              </div>
+              <h5>{{ item.ItemPrice | currency }}</h5>
+            </div>
+          </div>
+          <div class="row" id="totals">
+            <div class="d-flex justify-content-between p-2">
+              <h5>Subtotal</h5>
+              <h5>{{this.cartSubtotal() | currency}}</h5>
+            </div>
+            <div class="d-flex justify-content-between p-2">
+              <h5>Discounts</h5>
+              <span *ngIf="activeCoupon.CouponDiscount != 1; else noDiscount">
+                <h5 class="text-end">-{{this.cartSubtotal() * (1-activeCoupon.CouponDiscount) | currency}}</h5>
+                <div class="row border rounded p-2 align-items-center">
+                  <div class="col">
+                    <small>Coupon <strong>{{activeCoupon.CouponCode}}</strong> applied</small>
+                  </div>
+                  <div class="col col-sm-2">
+                    <button type="button" class="btn-close" (click)="deactivateCoupon()"></button>
+                  </div>
+                </div>
+                
+              </span>
+              <ng-template #noDiscount>
+                <h5>-{{0 | currency}}</h5>
+              </ng-template>
+            </div>
+            <div class="d-flex justify-content-between p-2">
+              <h5>Taxes</h5>
+              <span *ngIf="activeCoupon.CouponDiscount != 1; else taxes">
+                <h5>{{this.cartSubtotal() * (activeCoupon.CouponDiscount) * 0.13 | currency}}</h5>
+              </span>
+              <ng-template #taxes>
+                <h5>{{this.cartSubtotal() * 0.13 | currency}}</h5>
+              </ng-template>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between p-2">
+              <h4>Total</h4>
+              <span *ngIf="activeCoupon.CouponDiscount != 1; else total">
+                <h5>{{this.cartSubtotal() * (activeCoupon.CouponDiscount) * 1.13 | currency}}</h5>
+              </span>
+              <ng-template #total>
+                <h5>{{this.cartSubtotal() * 1.13 | currency}}</h5>
+              </ng-template>
+            </div>
+            <div class="justify-content-between p-2">
+                <h5>Have a coupon code?</h5>
+                <div class="input-group" id="coupon-form">
+                  <input type="text" class="form-control" id="coupon">
+                  <button class="btn btn-outline-secondary" (click)="validateCoupon()">&#8594;</button>
+                </div>
+                <span id="coupon-error" style="color:red;"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-evenly">
+          <button class="btn btn-outline-secondary w-auto" (click)="back()">&#8592; Back</button>
+          <button *ngIf="this.checkoutStep == 0" class="btn btn-outline-primary w-auto" (click)="toDelivery()" [disabled]="!shipToForm.valid">Next &#8594;</button>
+          <button *ngIf="this.checkoutStep == 1" class="btn btn-outline-primary w-auto" (click)="toPayment()">Next &#8594;</button>
+          <button *ngIf="this.checkoutStep == 2" class="btn btn-outline-primary w-auto" (click)="submitOrder()" [disabled]="!paymentForm.valid">Submit order</button>
+        </div>
+      </div>
+    </div>
+  </div>

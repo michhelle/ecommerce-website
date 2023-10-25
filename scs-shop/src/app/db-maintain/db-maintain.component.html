@@ -1,0 +1,125 @@
+<app-navbar></app-navbar>
+
+<div class="container" *ngIf="mode == 'create'">
+    <h3>Insert into</h3>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span *ngIf="currentTable; else noName">{{currentTable}}</span>
+            <ng-template #noName>Table</ng-template>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" *ngFor="let table of tables" id="{{table}}" (click)="setTable(table)">{{table}}</a>
+        </div>
+    </div>
+
+    <div id="columns" *ngIf="currentTableCols.length > 0">
+        <!-- <button class="btn btn-outline-primary">Select All</button>
+        <button class="btn btn-outline-secondary">Deselect All</button> -->
+        <h3>Columns</h3>
+        <div class="form-check" *ngFor="let col of currentTableCols" id="col-select">
+            <input class="form-check-input col-checkbox" type="checkbox" value="{{col}}" id="{{col}}-checkbox" (change)="toggleCol(col)" checked>
+            <label class="form-check-label" for="{{col}}">{{col}}</label>
+            <input type="text" class="form-control col-input" id="{{col}}" *ngIf="selectedCols.includes(col)">
+        </div>
+        <button type="submit" class="btn btn-outline-success d-block m-auto my-2" (click)="insert()">Insert</button>
+        <p id="insertMsg" *ngIf="dbMsg">{{dbMsg}}</p>
+    </div>
+</div>
+
+<div class="container" *ngIf="mode == 'read'">
+    <h3>Select from</h3>
+    <!-- <label for="tableName" class="form-label">SELECT * FROM</label> -->
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span *ngIf="currentTable; else noName">{{currentTable}}</span>
+            <ng-template #noName>Table</ng-template>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" *ngFor="let table of tables" id="{{table}}" (click)="setTable(table)">{{table}}</a>
+        </div>
+    </div>
+
+    <div id="columns" *ngIf="currentTableCols.length > 0">
+        <!-- <button class="btn btn-outline-primary">Select All</button>
+        <button class="btn btn-outline-secondary">Deselect All</button> -->
+        <h3>Columns</h3>
+        <div class="form-check" *ngFor="let col of currentTableCols" id="col-select">
+            <input class="form-check-input col-checkbox" type="checkbox" value="{{col}}" id="{{col}}" checked>
+            <label class="form-check-label" for="{{col}}">{{col}}</label>
+        </div>
+    </div>
+    
+    <div *ngIf="currentTableCols.length > 0">
+        <h3>Where</h3>
+        <input type="text" class="form-control" id="where" name="where">
+        <button type="submit" class="btn btn-outline-success d-block m-auto my-2" (click)="select()">Submit</button>
+    </div>
+</div>
+
+<div class="container" *ngIf="mode == 'update'">
+    <h3>Update table</h3>
+    <!-- <label for="tableName" class="form-label">SELECT * FROM</label> -->
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span *ngIf="currentTable; else noName">{{currentTable}}</span>
+            <ng-template #noName>Table</ng-template>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" *ngFor="let table of tables" id="{{table}}" (click)="setTable(table)">{{table}}</a>
+        </div>
+    </div>
+
+    <div id="columns" *ngIf="currentTableCols.length > 0">
+        <h3>Set columns to</h3>
+        <div class="form-check" *ngFor="let col of currentTableCols" id="col-select">
+            <input class="form-check-input col-checkbox" type="checkbox" value="{{col}}" id="{{col}}-checkbox" (change)="toggleCol(col)" checked>
+            <label class="form-check-label" for="{{col}}">{{col}}</label>
+            <input type="text" class="form-control col-input" id="{{col}}" *ngIf="selectedCols.includes(col)">
+        </div>
+    </div>
+    
+    <div *ngIf="currentTableCols.length > 0">
+        <h3>Where</h3>
+        <input type="text" class="form-control" id="where" name="where">
+        <button type="submit" class="btn btn-outline-success d-block m-auto my-2" (click)="update()">Submit</button>
+        <p id="updateMsg" *ngIf="dbMsg">{{dbMsg}}</p>
+    </div>
+</div>
+
+<div class="container" *ngIf="mode == 'delete'">
+    <h3>Delete from</h3>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span *ngIf="currentTable; else noName">{{currentTable}}</span>
+            <ng-template #noName>Table</ng-template>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" *ngFor="let table of tables" id="{{table}}" (click)="setTable(table)">{{table}}</a>
+        </div>
+    </div>
+
+    <div *ngIf="currentTableCols.length > 0">
+        <h3>Where</h3>
+        <input type="text" class="form-control" id="where" name="where">
+        <button type="submit" class="btn btn-outline-success d-block m-auto my-2" (click)="delete()">Submit</button>
+        <p id="deleteMsg" *ngIf="dbMsg">{{dbMsg}}</p>
+    </div>
+
+    <div id="columns" *ngIf="currentTableCols.length > 0">
+        <h3>Columns in {{currentTable}}</h3>
+        <p>{{currentTableCols.join("; ")}}</p>
+    </div>
+</div>
+
+<div class="container" *ngIf="mode == 'result'">
+    <h3>Results</h3>
+    <table>
+        <tr>
+            <th *ngFor="let col of selectedCols">{{col}}</th>
+        </tr>
+        <tr *ngFor="let row of results">
+            <td *ngFor="let col of selectedCols">{{row[col]}}</td>
+        </tr>
+    </table>
+    <button class="btn btn-outline-primary d-block" (click)="back()">Back</button>
+</div>
