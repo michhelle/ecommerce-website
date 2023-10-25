@@ -13,7 +13,7 @@ Final project for CPS630.
 - **Check MySQL settings**: Verify that the MySQL host, username, and password in the `server.js` file are correct.
 - **Start the backend server**: After the modules are installed, start the backend server with the command  `node server.js` (Default port is 3000).
 
-### Running Angulat frontend:
+### Running Angular frontend:
 
 - **Open a terminal**: In the terminal or command prompt, navigate to the `scs-shop` folder from the project's main directory.
 - **Install required modules**: Make sure you have Node.js and Angular installed. Then, run `npm install --force` to install the necessary frontend modules.
