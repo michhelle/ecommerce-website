@@ -17,6 +17,6 @@ Final project for CPS630.
 
 - **Open a terminal**: In the terminal or command prompt, navigate to the `scs-shop` folder from the project's main directory.
 - **Install required modules**: Make sure you have Node.js and Angular installed. Then, run `npm install --force` to install the necessary frontend modules.
--** Ensure the backend is running**: Confirm that the Node.js backend is already up and running.
+- ** Ensure the backend is running**: Confirm that the Node.js backend is already up and running.
 - **Start the frontend**: Once the backend is running, you can serve the frontend by running `ng serve --proxy-config proxy.config.json` in the terminal.
 - **View the frontend**: When the terminal indicates that the frontend has been compiled successfully, you can view it in your web browser at http://localhost:4200.
